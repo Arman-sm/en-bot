@@ -1,7 +1,8 @@
 import "dotenv"
 
-import { Client, GatewayIntentBits } from "discord.js"
+import { Client, GatewayIntentBits, Message } from "discord.js"
 import { ReacordDiscordJs } from "reacord"
+import { is_ascii, is_emoji } from "./utils/text_tools"
 
 const client = new Client({
 	intents: [
@@ -11,6 +12,7 @@ const client = new Client({
 		
 	]
 })
+
 const reacord = new ReacordDiscordJs(client)
 
 client.on("ready", () => console.log("Discord.js client is ready."))
@@ -25,16 +27,38 @@ client.on("ready", () => {
 	})
 })
 
-client.on("interactionCreate", (interaction) => {
+client.on("interactionCreate", interaction => {
 	if (interaction.isCommand() && interaction.commandName === "ping") {
 		// Use the reply() function instead of send
-		reacord.reply(interaction, <>pong!</>)
+		interaction.reply("pong!?")
 	}
 })
 
+class MessageJob {
+	public content: string
+
+	constructor(msg: Message) {
+		this.content = msg.content
+	}
+}
+
+function is_valid(msg: MessageJob): boolean {
+	for (const char of msg.content) {
+		if (!(
+			is_ascii(char) ||
+			is_emoji(char)
+		)) {
+			return false
+		}
+	}
+	return true
+}
+
 client.on("messageCreate", msg => {
 	// try { new URL(msg.content); continue } catch {}
-	if (!(/^[(<a?)?:\w+:(\d{18}>)? | \x00-\x7F]+$/gm.test(msg.content))) {
+	const job = new MessageJob(msg)
+
+	if (!is_valid(job)) {
 		msg.reply("Speak English sweetie.")
 		setTimeout(() => msg.delete(), 5000)
 	}
