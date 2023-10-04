@@ -1,15 +1,18 @@
 # en-bot
 
-To install dependencies:
+An annoying but fun bot for an English discord channel
 
-```bash
-bun install
-```
+## Setup
+For using the bot you should set your discord token as en environment variable called `DISCORD_TOKEN`.
+You could use `.env` files as well.
 
-To run:
+After that you can add the bot to your server but you have to give it permission to:
+ - read messages
+ - send messages
+ - delete messages
 
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.0.3. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Commands
+### `ping`
+Responds `pong` ( for testing purposes )
+### `config`
+Not implemented yet.
