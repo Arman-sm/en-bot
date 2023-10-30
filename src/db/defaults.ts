@@ -1,6 +1,9 @@
-import type { IPolicy } from "../MessageJob";
+import type { IPolicy } from "../interfaces/Job";
 
-export const DEFAULT_GUILD_POLICY: IPolicy = { 
+export const DEFAULT_POLICY: IPolicy = { 
 	allow_emojis:  true,
-	allow_persian: false
+	allowed_languages: {
+		en: true,
+		fa: false
+	}
 }
