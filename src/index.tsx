@@ -5,7 +5,6 @@ import { MessageJob } from "@interfaces/Job"
 import { CommandManager } from "@interfaces/Command"
 import { is_valid } from "./validator"
 import commands from "@utils/commands-listed"
-import { is_emoji } from "@utils/text-tools"
 
 const SENTENCES = ["Speak English dear", "Enough!", "I'm here so OBEY the rules!", "Slow down darling.", "It's annoying, I know", "Speak English sweetie."]
 
@@ -28,6 +27,5 @@ client.on("messageCreate", async msg => {
 	
 	if (!await is_valid(job)) {
 		msg.reply(SENTENCES[Math.round(Math.random() * (SENTENCES.length - 1))])
-		setTimeout(() => msg.delete(), 5000)
 	}
 })

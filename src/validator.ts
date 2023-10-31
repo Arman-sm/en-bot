@@ -8,15 +8,15 @@ export async function is_valid(job: MessageJob): Promise<boolean> {
 
 	// Character based filters
 	for (const char of job.msg.content) {
-		if (
-			!is_ascii(char) &&
-			(policy.allow_emojis ? !is_emoji(char) : true)
-		) return false
+		if (!(
+			is_ascii(char) ||
+			(policy.allow_emojis && is_emoji(char))
+		)) return false
 	}
 
 	for (const part of job.msg.content.split(WHITESPACE_REGEX)) {
 		if (
-			(policy.allow_link ? !is_link(part) : true)
+			(!policy.allow_link && is_link(part))
 		) return false
 	}
 
