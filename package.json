@@ -11,7 +11,7 @@
   "dependencies": {
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
-    "reacord": "^0.5.4",
+    "reacord": "^0.6.0",
     "react": "^18.2.0",
     "redis": "^4.6.10",
     "redis-om": "^0.4.2",

@@ -13,7 +13,7 @@ export const client = new Client({
 
 export const reacord = new ReacordDiscordJs(client)
 
-client.on("ready", () => console.log("A new discord client has just been initiated"))
+client.on("ready", () => console.log("A new discord client has just been initialized"))
 client.on("error", console.error)
 
 await client.login(process.env.DISCORD_TOKEN)

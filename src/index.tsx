@@ -5,15 +5,13 @@ import { MessageJob } from "@interfaces/Job"
 import { CommandManager } from "@interfaces/Command"
 import { is_valid } from "./validator"
 import commands from "@utils/commands-listed"
+import { is_emoji } from "@utils/text-tools"
 
 const SENTENCES = ["Speak English dear", "Enough!", "I'm here so OBEY the rules!", "Slow down darling.", "It's annoying, I know", "Speak English sweetie."]
 
 const cmd_mgr = new CommandManager(client, commands)
 
-client.on("ready", async () => {
-	console.log("Discord.js client is ready.")
-	await cmd_mgr.sync()
-})
+client.once("ready", () => cmd_mgr.sync())
 
 client.on("interactionCreate", interaction => {
 	if (!interaction.isChatInputCommand() || !interaction.guildId) return

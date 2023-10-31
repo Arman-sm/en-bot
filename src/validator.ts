@@ -7,7 +7,7 @@ export async function is_valid(job: MessageJob): Promise<boolean> {
 	for (const char of job.msg.content) {
 		if (
 			!is_ascii(char) &&
-			(policy.allow_emojis && !is_emoji(char))
+			(policy.allow_emojis ? !is_emoji(char) : true)
 		) {
 			return false
 		}
