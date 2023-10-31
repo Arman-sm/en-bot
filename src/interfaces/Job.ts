@@ -11,8 +11,9 @@ export const ZLanguagePolicy = z.object({
 export type ILanguagePolicy = z.infer<typeof ZLanguagePolicy>
 
 export const ZPolicy = z.object({
-	allow_emojis: z.boolean(),
-	allowed_languages: ZLanguagePolicy
+	allow_emojis:      z.boolean(),
+	allow_link:        z.boolean(),
+	allowed_languages: ZLanguagePolicy,
 })
 
 export type IPolicy = z.infer<typeof ZPolicy>

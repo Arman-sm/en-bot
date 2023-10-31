@@ -3,14 +3,15 @@ import type { Command } from "@interfaces/Command";
 import { ZPolicy, type IPolicy } from "@interfaces/Job";
 import { reacord } from "@src/discord";
 import { ChatInputCommandInteraction, GuildMember } from "discord.js";
-import { Button, Select, Option, useInstance, Embed } from "reacord";
+import { Button, Select, Option, Embed } from "reacord";
 import { createContext, useContext, useState } from "react";
 import { ZodBoolean, ZodType } from "zod";
 
 const interaction_context = createContext<ChatInputCommandInteraction | undefined>(undefined)
 const policy_trans_names = new Map<keyof IPolicy, string>([
 	["allow_emojis", "Emoji Allowance"],
-	["allowed_languages", "Allowed Languages"]
+	["allowed_languages", "Allowed Languages"],
+	["allow_link", "Link Allowance"]
 ])
 
 type TPolicyName = null | keyof IPolicy
