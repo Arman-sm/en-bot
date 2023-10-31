@@ -27,5 +27,6 @@ client.on("messageCreate", async msg => {
 	
 	if (!await is_valid(job)) {
 		msg.reply(SENTENCES[Math.round(Math.random() * (SENTENCES.length - 1))])
+		if ((await job.policy()).delete_invalids) setTimeout(() => msg.delete(), 5000)
 	}
 })

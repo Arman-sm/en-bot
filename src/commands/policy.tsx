@@ -11,7 +11,8 @@ const interaction_context = createContext<ChatInputCommandInteraction | undefine
 const policy_trans_names = new Map<keyof IPolicy, string>([
 	["allow_emojis", "Emoji Allowance"],
 	["allowed_languages", "Allowed Languages"],
-	["allow_link", "Link Allowance"]
+	["allow_link", "Link Allowance"],
+	["delete_invalids", "Delete Invalid Messages"]
 ])
 
 type TPolicyName = null | keyof IPolicy
