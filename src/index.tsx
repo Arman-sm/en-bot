@@ -10,10 +10,7 @@ const SENTENCES = ["Speak English dear", "Enough!", "I'm here so OBEY the rules!
 
 const cmd_mgr = new CommandManager(client, commands)
 
-client.on("ready", async () => {
-	console.log("Discord.js client is ready.")
-	await cmd_mgr.sync()
-})
+client.once("ready", () => cmd_mgr.sync())
 
 client.on("interactionCreate", interaction => {
 	if (!interaction.isChatInputCommand() || !interaction.guildId) return
@@ -30,6 +27,6 @@ client.on("messageCreate", async msg => {
 	
 	if (!await is_valid(job)) {
 		msg.reply(SENTENCES[Math.round(Math.random() * (SENTENCES.length - 1))])
-		setTimeout(() => msg.delete(), 5000)
+		if ((await job.policy()).delete_invalids) setTimeout(() => msg.delete(), 5000)
 	}
 })
