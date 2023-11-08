@@ -23,10 +23,11 @@ client.on("messageCreate", async msg => {
 		return
 	}
 
-	const job = new MessageJob(msg)
+	const job    = new MessageJob(msg)
+	const policy = await  job.policy()
 	
-	if (!await is_valid(job)) {
+	if (!is_valid(job.msg.content, policy)) {
 		msg.reply(SENTENCES[Math.round(Math.random() * (SENTENCES.length - 1))])
-		if ((await job.policy()).delete_invalids) setTimeout(() => msg.delete(), 5000)
+		if (policy.delete_invalids) setTimeout(() => msg.delete(), 5000)
 	}
 })
