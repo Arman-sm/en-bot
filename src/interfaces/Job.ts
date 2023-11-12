@@ -12,7 +12,11 @@ export type ILanguagePolicy = z.infer<typeof ZLanguagePolicy>
 
 export const ZPolicy = z.object({
 	allow_emojis:      z.boolean(),
+	// HTTP & HTTPS URLs
 	allow_link:        z.boolean(),
+	// Ignore checking characters in links to see wether they are allowed in the language policy or not
+	ignore_link_chars: z.boolean(),
+	// Delete invalid messages or not
 	delete_invalids:   z.boolean(),
 	allowed_languages: ZLanguagePolicy,
 })

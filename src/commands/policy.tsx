@@ -1,18 +1,20 @@
+import { DEFAULT_POLICY } from "@db/defaults";
 import { set_guild_policy } from "@db/utils/policy";
 import type { Command } from "@interfaces/Command";
-import { ZPolicy, type IPolicy } from "@interfaces/Job";
+import { ZPolicy, type IPolicy, ZLanguagePolicy, ILanguagePolicy } from "@interfaces/Job";
 import { reacord } from "@src/discord";
 import { ChatInputCommandInteraction, GuildMember } from "discord.js";
 import { Button, Select, Option, Embed } from "reacord";
 import { createContext, useContext, useState } from "react";
-import { ZodBoolean, ZodType } from "zod";
+import { ZodBoolean } from "zod";
 
 const interaction_context = createContext<ChatInputCommandInteraction | undefined>(undefined)
 const policy_trans_names = new Map<keyof IPolicy, string>([
-	["allow_emojis", "Emoji Allowance"],
-	["allowed_languages", "Allowed Languages"],
-	["allow_link", "Link Allowance"],
-	["delete_invalids", "Delete Invalid Messages"]
+	["allow_emojis", "Emoji allowance"],
+	["allowed_languages", "Allowed languages"],
+	["allow_link", "Link allowance"],
+	["delete_invalids", "Delete invalid messages"],
+	["ignore_link_chars", "Ignore character validation in links"]
 ])
 
 type TPolicyName = null | keyof IPolicy
@@ -67,17 +69,36 @@ function BoolChange({ set: _set }: { set: TPolicyChangerSet<boolean> }) {
 	)
 }
 
-function what_changer(t: ZodType) {
-	if (t instanceof ZodBoolean) {
+function LangChange({ set: _set }: { set: TPolicyChangerSet<Partial<ILanguagePolicy>> }) {
+	const [lang, set_lang] = useState<keyof ILanguagePolicy | undefined>(undefined)
+	const [res, set_res] = useState<boolean | null>(null)
+
+	return res != null ?
+		`\n'${lang}' is ${res ? "" : "dis"}allowed from now.` :	
+		<>
+			<Select value={lang} onChangeValue={v => set_lang(v as any)}>{
+				Object.keys(DEFAULT_POLICY.allowed_languages)
+					.map(lang => <Option value={lang}/>)
+			}</Select>
+			{lang && <BoolChange set={v => {set_res(v); _set({[lang]: v})}}/>}
+		</>
+}
+
+function what_changer(policy_name: keyof IPolicy) {
+	const shape = ZPolicy.shape[policy_name]
+	
+	if (shape instanceof ZodBoolean) {
 		return BoolChange
+	} else if (policy_name == "allowed_languages") {
+		return LangChange
 	} else {
-		throw new Error(`Couldn't find changer component for ${t}`)
+		throw new Error(`Couldn't find changer component for ${shape}`)
 	}
 }
 
 function PolicyChange({ policy_name }: { policy_name: keyof IPolicy }) {
 	const interaction = useContext(interaction_context) as ChatInputCommandInteraction
-	const Changer = what_changer(ZPolicy.shape[policy_name])
+	const Changer = what_changer(policy_name)
 
 	function set(val: any) {
 		set_guild_policy(interaction.guildId as string, { [policy_name]: val })
