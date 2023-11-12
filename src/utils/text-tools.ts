@@ -1,5 +1,8 @@
-export function is_ascii(char: string): boolean {
-	return char.charCodeAt(0) < 128
+export function is_ascii(str: string): boolean {
+	for (const char of str) {
+		if (!(char.charCodeAt(0) < 128)) return false
+	}
+	return true
 }
 
 export function is_emoji(char: string): boolean {
