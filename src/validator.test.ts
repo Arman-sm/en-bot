@@ -4,6 +4,7 @@ import { DEFAULT_POLICY } from "@db/defaults";
 import type { IPolicy } from "@interfaces/Job";
 
 const POLICY_ALL_FALSE: IPolicy = {
+	ignore_link_chars: false,
 	allow_emojis: false,
 	allow_link: false,
 	allowed_languages: {
@@ -28,26 +29,41 @@ describe("Validation", () => {
 			is_valid(SENTENCE, {...DEFAULT_POLICY, allow_link: false}),
 		]).not.toContain(true)
 	})
+	describe("links", () => {
+		test("char validation off", () => {
+			const POLICY: IPolicy = {...POLICY_ALL_FALSE, allow_link: true, ignore_link_chars: true}
+			const chk = policy_based_check_helper(POLICY)
+			
+			chk("http://ww1.eg.example.co/سلام").toBe(true)
+			chk("https://hello/dwaad?dawd=adwتستی").toBe(true)
+			chk("http://planes/wdad/سیwad/adwad?s=dwad").toBe(true)
+		})
 
-	test("links", () => {
-		const POLICY: IPolicy = {...POLICY_ALL_FALSE, allow_link: true}
-		const chk = policy_based_check_helper(POLICY)
+		test("char validation on", () => {
+			const POLICY: IPolicy = {...POLICY_ALL_FALSE, allow_link: true, allowed_languages: { en: true, fa: false }}
+			const chk = policy_based_check_helper(POLICY)
+			
+			chk("http://ww1.eg.example.co").toBe(true)
+			chk("https://hello/dwaad?dawd=adw").toBe(true)
+			chk("http://planes/wdad/wad/adwad?s=dwad").toBe(true)
 
-		chk("http://ww1.eg.example.co").toBe(true)
-		chk("https://hello/dwaad?dawd=adw").toBe(true)
-		chk("http://planes/wdad/wad/adwad?s=dwad").toBe(true)
+			// Testing the validation of characters in links
+			chk("http://ww1.eg.example.co/سلام").toBe(false)
+			chk("https://hello/dwaad?dawd=adwتستی").toBe(false)
+			chk("http://planes/wdad/سیwad/adwad?s=dwad").toBe(false)
+		})
 	})
-
+		
 	describe("languages", () => {
 		test("English", () => {
 			const POLICY: IPolicy = {...POLICY_ALL_FALSE, allowed_languages: { en: true, fa: false }}
 			expect(is_valid("Just a really simple and straightforward text.", POLICY)).toBe(true)
 		})
 	
-		test.todo("Persian", () => {
+		test("Persian", () => {
 			const POLICY: IPolicy = {...POLICY_ALL_FALSE, allowed_languages: { en: false, fa: true }}
 			const chk = policy_based_check_helper(POLICY)
-			
+
 			chk("فقط یه متن خیلی معمولی و ساده.").toBe(true)
 			chk("این تَنها یِک چِک ساده بَرای نِشانه‌های صِدادار اَست پَس لُطفاً پاس بِشو اَگَر مَن دِقَّتِ کافی کَرده‌اَم.").toBe(true)
 		})
