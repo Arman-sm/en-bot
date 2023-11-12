@@ -17,4 +17,4 @@ After that you can add the bot to your server but you have to give it permission
 ### `ping`
 Responds `pong` ( for testing purposes )
 ### `policy`
-In development...
+Interactive command for configuring policies
