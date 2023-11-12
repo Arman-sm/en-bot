@@ -23,6 +23,10 @@ client.on("messageCreate", async msg => {
 		return
 	}
 
+	if (msg.author.id == client.user?.id) {
+		return
+	}
+
 	const job    = new MessageJob(msg)
 	const policy = await  job.policy()
 	
