@@ -14,6 +14,10 @@ export async function set_guild_policy(guild_id: string, value: Partial<IPolicy>
 	await GuildPolicies.save(guild_id, ZPolicy.partial().parse(value))
 }
 
+export async function update_guild_policy(guild_id: string, value: Partial<IPolicy>) {
+	await set_guild_policy(guild_id, { ...await get_guild_policy(guild_id), ...value })
+}
+
 export async function remove_guild_policy(guild_id: string) {
 	await GuildPolicies.remove([guild_id])
 }

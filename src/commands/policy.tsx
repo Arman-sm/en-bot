@@ -1,5 +1,5 @@
 import { DEFAULT_POLICY } from "@db/defaults";
-import { set_guild_policy } from "@db/utils/policy";
+import { update_guild_policy } from "@db/utils/policy";
 import type { Command } from "@interfaces/Command";
 import { ZPolicy, type IPolicy, ZLanguagePolicy, ILanguagePolicy } from "@interfaces/Job";
 import { reacord } from "@src/discord";
@@ -101,7 +101,7 @@ function PolicyChange({ policy_name }: { policy_name: keyof IPolicy }) {
 	const Changer = what_changer(policy_name)
 
 	function set(val: any) {
-		set_guild_policy(interaction.guildId as string, { [policy_name]: val })
+		update_guild_policy(interaction.guildId as string, { [policy_name]: val })
 	}
 
 	return <>
