@@ -23,6 +23,7 @@ export function validate_by_char_set_preference(text: string, lang_policy: ILang
 
 export function is_valid(content: string, policy: IPolicy): boolean {
 	for (let part of content.split(WHITESPACE_REGEX)) {
+		console.log(part)
 		if (is_link(part)) {
 			if (!policy.allow_link) return false
 			if (policy.ignore_link_chars) continue
@@ -34,7 +35,7 @@ export function is_valid(content: string, policy: IPolicy): boolean {
 		if (policy.allow_emojis) {
 			part = remove_custom_discord_emojis(part)
 		}
-		
+
 		// Character based filters
 		for (const char of part) {
 			// Skip punctuation
