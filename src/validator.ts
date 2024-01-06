@@ -1,10 +1,10 @@
 import type { ILanguagePolicy, IPolicy } from "@interfaces/Job"
-import { is_ascii, is_emoji, is_link } from "@utils/text-tools"
+import { is_unicode_emoji, is_link, remove_custom_discord_emojis } from "@utils/text-tools"
 
 const WHITESPACE_REGEX = /\s/
 
 const LANG_CHAR_SET_DETECTIONS: Record<keyof ILanguagePolicy, (str: string) => boolean> = {
-	en: is_ascii,
+	en: str => /^[a-zA-Z0-9]*$/.test(str),
 	fa: str => /^[آ-ی \u200C ء چ]*$/.test(str),
 }
 
@@ -27,7 +27,12 @@ export function is_valid(content: string, policy: IPolicy): boolean {
 			if (!policy.allow_link) return false
 			if (policy.ignore_link_chars) continue
 
-			part = part.replace(/https?\:\/\//, "").replaceAll("/", "")
+			// Exclude url structure
+			part = part.replace(/https?\:\/\//, "").replaceAll(/[\/\&\=]/g, "")
+		}
+
+		if (policy.allow_emojis) {
+			part = remove_custom_discord_emojis(part)
 		}
 		
 		// Character based filters
@@ -35,7 +40,7 @@ export function is_valid(content: string, policy: IPolicy): boolean {
 			// Skip punctuation
 			if (/\p{P}/u.test(char)) continue
 			// Emojis
-			if (policy.allow_emojis && is_emoji(char)) continue
+			if (policy.allow_emojis && is_unicode_emoji(char)) continue
 			// Other characters
 			if (validate_by_char_set_preference(char, policy.allowed_languages)) continue
 

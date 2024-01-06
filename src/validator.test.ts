@@ -68,4 +68,20 @@ describe("Validation", () => {
 			chk("این تَنها یِک چِک ساده بَرای نِشانه‌های صِدادار اَست پَس لُطفاً پاس بِشو اَگَر مَن دِقَّتِ کافی کَرده‌اَم.").toBe(true)
 		})
 	})
+
+	describe("emojis", () => {
+		test("enabled", () => {
+			const POLICY: IPolicy = {...POLICY_ALL_FALSE, allow_emojis: true}
+			const chk = policy_based_check_helper(POLICY)
+			
+			chk("😀😀😀 😀 😀😀").toBe(true)
+		})
+
+		test("disabled", () => {
+			const POLICY: IPolicy = {...POLICY_ALL_FALSE}
+			const chk = policy_based_check_helper(POLICY)
+			
+			chk("😀😀😀 😀 😀😀").toBe(false)
+		})
+	})
 })
