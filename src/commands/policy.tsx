@@ -78,7 +78,7 @@ function LangChange({ set: _set }: { set: TPolicyChangerSet<Partial<ILanguagePol
 		<>
 			<Select value={lang} onChangeValue={v => set_lang(v as any)}>{
 				Object.keys(DEFAULT_POLICY.allowed_languages)
-					.map(lang => <Option value={lang}/>)
+					.map(lang => <Option value={lang} key={lang}/>)
 			}</Select>
 			{lang && <BoolChange set={v => {set_res(v); _set({[lang]: v})}}/>}
 		</>
