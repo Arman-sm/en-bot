@@ -10,7 +10,7 @@ const SENTENCES = ["Speak English dear", "Enough!", "I'm here so OBEY the rules!
 
 const cmd_mgr = new CommandManager(client, commands)
 
-client.once("ready", () => cmd_mgr.sync())
+client.once("ready", async () => await cmd_mgr.sync())
 
 client.on("interactionCreate", interaction => {
 	if (!interaction.isChatInputCommand() || !interaction.guildId) return
