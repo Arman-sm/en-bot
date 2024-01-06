@@ -4,7 +4,7 @@ An annoying but fun bot for an English discord channel
 
 ## Setup
 For using the bot you should set your discord token as en environment variable called `DISCORD_TOKEN`.
-A redis database is also required for the bot to run, you can provide your redis connection url via setting the `REDIS_CONNECTION_URL` environment variables.
+A redis database is also required for the bot to run, you can provide your redis connection url via setting the `REDIS_URL` environment variables.
 
 Note: `.env` files are supported.
 

@@ -1,12 +1,12 @@
 import { createClient } from "redis"
 
-if (!process.env.REDIS_CONNECTION_URL) {
+if (!process.env.REDIS_URL) {
 	console.error("Redis connection URL wasn't provided")
 	process.exit(1)
 }
 
 export const db = createClient({
-	url: process.env.REDIS_CONNECTION_URL
+	url: process.env.REDIS_URL
 })
 
 db.on("error", err => console.error(err))
