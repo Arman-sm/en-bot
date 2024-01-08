@@ -5,9 +5,10 @@ export const GuildPolicy = new Schema("GuildPolicy", {
 	allow_link:         { type: "boolean" }, // http & https
 	delete_invalids:    { type: "boolean" },
 
+	allowed_languages:  { type: "string" }
 	// Allowed languages
-	fa: { type: "boolean", path: "$.allowed_languages.fa" },
-	en: { type: "boolean", path: "$.allowed_languages.en" },
+	// fa: { type: "boolean", path: "$.allowed_languages.fa" },
+	// en: { type: "boolean", path: "$.allowed_languages.en" },
 }, {
-	dataStructure: "JSON"
+	dataStructure: "HASH"
 })
