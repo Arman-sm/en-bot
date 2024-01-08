@@ -24,7 +24,7 @@ export const ZPolicy = z.object({
 export type IPolicy = z.infer<typeof ZPolicy>
 
 export class MessageJob {
-	readonly msg: Message
+	public msg: Message
 
 	constructor(msg: Message) {
 		if (!msg.guildId) throw new Error("Message does not have 'guild id'")
