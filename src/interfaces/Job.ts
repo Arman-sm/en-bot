@@ -10,6 +10,8 @@ export const ZLanguagePolicy = z.object({
 
 export type ILanguagePolicy = z.infer<typeof ZLanguagePolicy>
 
+export type IPartialPolicy = Partial<Omit<IPolicy, "allowed_languages"> & { allowed_languages: Partial<ILanguagePolicy> }>
+
 export const ZPolicy = z.object({
 	allow_emojis:      z.boolean(),
 	// HTTP & HTTPS URLs
