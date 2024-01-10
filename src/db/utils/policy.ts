@@ -1,21 +1,25 @@
+import { error } from "@src/logger"
 import { ZPolicy, type IPolicy, ZLanguagePolicy } from "../../interfaces/Job"
 import { GuildPolicies } from "../repos"
 
 export async function get_guild_policy(guild_id: string): Promise<Partial<IPolicy>> {
 	const {allowed_languages, ...res} = await GuildPolicies.fetch(guild_id)
+
+	const langZodRes = ZLanguagePolicy.partial().safeParse(
+		JSON.parse(allowed_languages as string | undefined || "{}")
+	)
 	
-	const langZodRes = ZLanguagePolicy.partial().safeParse(JSON.parse(allowed_languages as string) || {})
 	const mainZodRes = ZPolicy.partial().safeParse(res)
 
 	//@ts-ignore
 	const err = mainZodRes?.error || langZodRes?.error
 	if (err) {
-		console.error(`Guild ID ${guild_id}'s had invalid data (zod error: ${err})`)
+		error(`Guild ID ${guild_id}'s had invalid data (zod error: ${err})`)
 		return {}
 	}
 
 	//@ts-ignore
-	return {...mainZodRes.data, allowed_languages: langZodRes.data}
+	return {...mainZodRes, allowed_languages: langZodRes.data}
 }
 
 export async function set_guild_policy(guild_id: string, _value: Partial<IPolicy>) {
