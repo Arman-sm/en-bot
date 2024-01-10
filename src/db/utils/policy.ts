@@ -5,10 +5,12 @@ import { GuildPolicies } from "../repos"
 export async function get_guild_policy(guild_id: string): Promise<Partial<IPolicy>> {
 	const {allowed_languages, ...res} = await GuildPolicies.fetch(guild_id)
 
+	console.log(allowed_languages)
+
 	const langZodRes = ZLanguagePolicy.partial().safeParse(
 		JSON.parse(allowed_languages as string | undefined || "{}")
 	)
-	
+
 	const mainZodRes = ZPolicy.partial().safeParse(res)
 
 	//@ts-ignore
