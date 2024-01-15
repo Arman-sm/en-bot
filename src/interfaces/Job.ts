@@ -39,6 +39,7 @@ export class MessageJob {
 	}
 
 	async policy(): Promise<IPolicy> {
-		return {...DEFAULT_POLICY, ...await get_guild_policy(this.msg.guildId as string)}
+		let data = await get_guild_policy(this.msg.guildId as string)
+		return {...DEFAULT_POLICY, ...data, allowed_languages: {...DEFAULT_POLICY.allowed_languages, ...data?.allowed_languages}}
 	}
 }

@@ -1,14 +1,13 @@
 import { debug, error, trace } from "@src/logger"
-import { ZPolicy, type IPolicy, ZLanguagePolicy, ILanguagePolicy, IPartialPolicy } from "../../interfaces/Job"
-import { GuildPolicies } from "../repos"
+import { ZPolicy, type IPolicy, ZLanguagePolicy, IPartialPolicy } from "../../interfaces/Job"
+import { GuildPolicy } from "../schemas/guild_policy"
+import { db } from "@db/db"
 
 export async function get_guild_policy(guild_id: string): Promise<IPartialPolicy> {
-	const {allowed_languages, ...res} = await GuildPolicies.fetch(guild_id)
+	const {allowed_languages, ...res} = await GuildPolicy.fetch(guild_id, db)
 
 	trace("Checking for errors in the retrieved data")
-	const langZodRes = ZLanguagePolicy.partial().safeParse(
-		JSON.parse(allowed_languages as string | undefined || "{}")
-	)
+	const langZodRes = ZLanguagePolicy.partial().safeParse(allowed_languages)
 
 	const mainZodRes = ZPolicy.partial().safeParse(res)
 
@@ -22,25 +21,17 @@ export async function get_guild_policy(guild_id: string): Promise<IPartialPolicy
 	return {...mainZodRes, allowed_languages: langZodRes.data}
 }
 
-export async function set_guild_policy(
-	guild_id: string, _value: Partial<Omit<IPolicy, "allowed_languages"> & { allowed_languages: Partial<ILanguagePolicy> }>
-) {
+export async function set_guild_policy(guild_id: string, _value: IPartialPolicy) {
 	const {allowed_languages: _allowed_languages, ...value} = _value
 	const allowed_languages = ZLanguagePolicy.partial().parse(_allowed_languages || {})
 
-	await GuildPolicies.save(guild_id, {...ZPolicy.partial().parse(value), allowed_languages})
+	await GuildPolicy.set(guild_id, {...ZPolicy.partial().parse(value), allowed_languages}, db)
 }
 
 export async function update_guild_policy(guild_id: string, value: Partial<IPolicy>) {
-	const prev_data = await get_guild_policy(guild_id)
-
-	await set_guild_policy(guild_id, {
-		...prev_data,
-		...value,
-		allowed_languages: {...prev_data.allowed_languages, ...value.allowed_languages}
-	})
+	await GuildPolicy.update(guild_id, value, db)
 }
 
 export async function remove_guild_policy(guild_id: string) {
-	await GuildPolicies.remove([guild_id])
+	await GuildPolicy.delete(guild_id, db)
 }
