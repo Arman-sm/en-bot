@@ -1,10 +1,10 @@
-import { RedisClientType } from "redis"
+import type { RedisClientType } from "redis"
 
 type RedisConn = RedisClientType<any, any, any>
 
-type TFieldType = "boolean" | "string" | "json"
+export type TFieldType = "boolean" | "string" | "json"
 
-type TFieldTypes = {
+export type TFieldTypes = {
 	"boolean": boolean
 	"string":  string
 	"json":    object
@@ -40,12 +40,12 @@ export class RedisHashSchema<
 		let res
 		
 		switch (this.type_of(field)) {
-			case "boolean": res = data !== "0"
-			case "string":  res = data
-			case "json":    res = JSON.parse(data)
+			case "boolean": res = data !== "0"    ; break
+			case "string":  res = data            ; break
+			case "json":    res = JSON.parse(data); break
 		}
 
-		if (res === undefined) throw new Error(`No method to deserialize '${field as string}'`)
+		if (res === undefined) throw new Error(`No method to deserialize '${field as string}' with type '${this.type_of(field)}'`)
 
 		return res as any
 	}

@@ -7,7 +7,7 @@ export async function get_guild_policy(guild_id: string): Promise<IPartialPolicy
 	const {allowed_languages, ...res} = await GuildPolicy.fetch(guild_id, db)
 
 	trace("Checking for errors in the retrieved data")
-	const langZodRes = ZLanguagePolicy.partial().safeParse(allowed_languages)
+	const langZodRes = ZLanguagePolicy.partial().safeParse(allowed_languages ?? {})
 
 	const mainZodRes = ZPolicy.partial().safeParse(res)
 

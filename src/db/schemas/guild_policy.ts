@@ -1,7 +1,8 @@
-import { RedisHashSchema } from "@db/lib";
+import { RedisHashSchema, TFieldType } from "@db/lib";
+import type { IPolicy } from "@interfaces/Job";
 
 export const GuildPolicy = new RedisHashSchema({
-	allow_emoji:        "boolean",
+	allow_emojis:        "boolean",
 	allow_link:         "boolean", // http & https
 	
 	ignore_link_chars:  "boolean",
@@ -9,4 +10,4 @@ export const GuildPolicy = new RedisHashSchema({
 	delete_invalids:    "boolean",
 
 	allowed_languages:  "json"
-}, "GuildPolicy:")
+} satisfies { [policy in keyof IPolicy]: TFieldType }, "GuildPolicy:")
